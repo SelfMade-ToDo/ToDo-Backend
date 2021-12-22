@@ -13,4 +13,8 @@ export class AuthService {
   async findById(id: number): Promise<User> {
     return this.userRepository.findOne(id);
   }
+
+  async findUsers(): Promise<User[]> {
+    return this.userRepository.find();
+  }
 }

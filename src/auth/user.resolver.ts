@@ -10,4 +10,9 @@ export class UserResolver {
   async user(@Args('id', { type: () => Int }) id: number) {
     return this.authService.findById(id);
   }
+
+  @Query(() => [User], { name: 'users' })
+  async getUsersByNickname() {
+    return this.authService.findUsers();
+  }
 }
