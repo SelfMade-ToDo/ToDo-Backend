@@ -24,9 +24,9 @@ export class Plan {
   @Column()
   description: string;
 
-  @Field(() => Date)
-  @CreateDateColumn()
-  createdDate: Date;
+  @Field(() => Boolean)
+  @Column()
+  isFinished: boolean;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.plans)
