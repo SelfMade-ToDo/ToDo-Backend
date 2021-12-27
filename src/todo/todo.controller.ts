@@ -16,6 +16,8 @@ import { JwtAuthGuard } from 'src/auth/jwt_auth.guard';
 import { DeleteResult } from 'typeorm';
 import { AddPlan } from './dto/addPlan.dto';
 import { ModifyPlan } from './dto/modifyPlan.dto';
+import { ReturnError } from './dto/returnError.dto';
+import { ReturnResult } from './dto/returnResult.dto';
 import { Plan } from './entity/plan.entity';
 import { TodoService } from './todo.service';
 
@@ -34,10 +36,9 @@ export class TodoController {
     try {
       plans = await this.todoService.getPlans(payload.id);
     } catch (e: any) {
-      // eslint-disable-next-line prettier/prettier
-      return res.status(HttpStatus.BAD_REQUEST).json({ 'error': e });
+      return res.status(HttpStatus.BAD_REQUEST).json(new ReturnError(e));
     }
-    return res.status(HttpStatus.OK).json(plans);
+    return res.status(HttpStatus.OK).json({ planList: plans });
   }
 
   @UseGuards(JwtAuthGuard)
@@ -52,8 +53,7 @@ export class TodoController {
     try {
       plan = await this.todoService.addPlan(payload.id, addPlan);
     } catch (e: any) {
-      // eslint-disable-next-line prettier/prettier
-      return res.status(HttpStatus.BAD_REQUEST).json({ 'error': e });
+      return res.status(HttpStatus.BAD_REQUEST).json(new ReturnError(e));
     }
     return res.status(HttpStatus.OK).json(plan);
   }
@@ -71,10 +71,9 @@ export class TodoController {
     try {
       plan = await this.todoService.modifyPlan(planId, modifyPlan);
     } catch (e: any) {
-      // eslint-disable-next-line prettier/prettier
-      return res.status(HttpStatus.BAD_REQUEST).json({ 'error': e });
+      return res.status(HttpStatus.BAD_REQUEST).json(new ReturnError(e));
     }
-    return res.status(HttpStatus.OK).json(plan);
+    return res.status(HttpStatus.OK).json(new ReturnResult(plan));
   }
 
   @UseGuards(JwtAuthGuard)
@@ -85,13 +84,12 @@ export class TodoController {
     @Res() res: Response,
   ): Promise<Response<any, Record<string, any>>> {
     const payload: { id: number; name: string; email: string } = req.user;
-    let plan: DeleteResult;
+    let result: DeleteResult;
     try {
-      plan = await this.todoService.deletePlan(planId);
+      result = await this.todoService.deletePlan(planId);
     } catch (e: any) {
-      // eslint-disable-next-line prettier/prettier
-      return res.status(HttpStatus.BAD_REQUEST).json({ 'error': e });
+      return res.status(HttpStatus.BAD_REQUEST).json(new ReturnError(e));
     }
-    return res.status(HttpStatus.OK).json(plan);
+    return res.status(HttpStatus.OK).json(new ReturnResult(result));
   }
 }
