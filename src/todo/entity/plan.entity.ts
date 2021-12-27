@@ -2,7 +2,6 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { User } from 'src/auth/entity/user.entity';
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -12,6 +11,12 @@ import {
 @ObjectType()
 @Entity()
 export class Plan {
+  constructor(name: string, description: string, user: User) {
+    this.name = name;
+    this.description = description;
+    this.user = user;
+  }
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
@@ -25,7 +30,7 @@ export class Plan {
   description: string;
 
   @Field(() => Boolean)
-  @Column()
+  @Column({ default: false })
   isFinished: boolean;
 
   @Field(() => User)
