@@ -55,7 +55,7 @@ export class TodoController {
     } catch (e: any) {
       return res.status(HttpStatus.BAD_REQUEST).json(new ReturnError(e));
     }
-    return res.status(HttpStatus.OK).json(plan);
+    return res.status(HttpStatus.OK).json({ plan: plan });
   }
 
   @UseGuards(JwtAuthGuard)
